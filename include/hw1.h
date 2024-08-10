@@ -15,6 +15,7 @@ namespace algebra
     struct MultiplyIncorrespondence : public Incorrespondence {};
     struct SumIncorrespondence : public Incorrespondence {};
     struct NotSquareMatrix : public Incorrespondence {};
+    struct SingularMatrix : public AlgebraException {};
 
 
     Matrix zeros(int n, int m);
@@ -31,4 +32,5 @@ namespace algebra
     Matrix transpose(const Matrix& matrix);
     Matrix minor(const Matrix& matrix, int n, int m);
     double determinant(const Matrix& matrix);
+    Matrix inverse(const Matrix& matrix);
 }

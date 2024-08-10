@@ -194,14 +194,18 @@ Matrix minor(const Matrix& matrix, int n, int m)
 
 double determinant(const Matrix& matrix)
 {
-    if (matrix.size()!=matrix[1].size())
+    if (matrix.size()!=matrix[0].size())
     {
-        Incorrespondence e;
+        NotSquareMatrix e;
         throw e;
     }
     if (matrix.size()==2)
     {
         return matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0];
+    }
+    if (matrix.size()==1)
+    {
+        return matrix[0][0];
     }
     double res = 0;
     for (int i = 0; i < matrix.size(); i++)
@@ -212,16 +216,51 @@ double determinant(const Matrix& matrix)
     return res;
 }
 
+Matrix inverse(const Matrix& matrix)
+{
+    if (matrix.size()!=matrix[0].size())
+    {
+        NotSquareMatrix e;
+        throw e;
+    }
+    Matrix res = matrix;
+    double det = 0;
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        if (i == 0)
+        {
+            for (int j = 0; j < matrix.size(); j++)
+            {
+                res[j][i] = ((i+j)%2==0 ? 1 : -1) * determinant(minor(matrix, j, i));
+                det += res[j][i] * matrix[i][j];
+            }
+        }
+        else
+        {
+            for (int j = 0; j < matrix.size(); j++)
+            {
+                res[j][i] = ((i+j)%2==0 ? 1 : -1) * determinant(minor(matrix, j, i));
+            }
+        }
+    }
+    if (det==0)
+    {
+        SingularMatrix e;
+        throw e;
+    }
+    return multiply(res, 1/det);
+}
+
 }
 
 using namespace algebra;
 
 int main()
 {
-    //Matrix a = {{2, 2}, {1, 3}, {2, 1}};
+    //Matrix a = {{2,1 2}, {1, 3}, {2, 1}};
     Matrix b = {{1, 3}, {6, 2}};
     Matrix c = {{1, 3, 9}, {6, 2, 3}, {4, 2, 7}};
-    std::cout << determinant(b) << std::endl;
-    std::cout << determinant(c) << std::endl;
+    show(inverse(c));
+    //std::cout<<determinant(c)<<std::endl;
     return 0;
 }
