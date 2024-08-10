@@ -36,4 +36,8 @@ namespace algebra
     double determinant(const Matrix& matrix);
     Matrix inverse(const Matrix& matrix);
     Matrix concatenate(const Matrix& matrix1, const Matrix& matrix2, int axis);
+    Matrix ero_swap(const Matrix& matrix, int r1, int r2);
+    Matrix ero_multiply(const Matrix& matrix, int r, double c);
+    Matrix ero_sum(const Matrix& matrix, int r1, double c, int r2);
+    Matrix upper_triangular(const Matrix& matrix);
 }

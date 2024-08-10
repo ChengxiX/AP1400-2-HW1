@@ -208,6 +208,10 @@ double determinant(const Matrix& matrix)
     {
         return matrix[0][0];
     }
+    if (matrix.size()==0)
+    {
+        return 1;
+    }
     double res = 0;
     for (int i = 0; i < matrix.size(); i++)
     {
@@ -286,6 +290,47 @@ Matrix concatenate(const Matrix& matrix1, const Matrix& matrix2, int axis=0)
     }
 }
 
+Matrix ero_swap(const Matrix& matrix, int r1, int r2)
+{
+    Matrix res = matrix;
+    res[r1] = matrix[r2];
+    res[r2] = matrix[r1];
+    return res;
+}
+
+Matrix ero_multiply(const Matrix& matrix, int r, double c)
+{
+    Matrix res = matrix;
+    res[r] = multiply(res[r], c);
+    return res;
+}
+
+Matrix ero_sum(const Matrix& matrix, int r1, double c, int r2)
+{
+    Matrix res = matrix;
+    res[r2] = sum(matrix[r2], multiply(matrix[r1], c));
+    return res;
+}
+
+Matrix upper_triangular(const Matrix& matrix)
+{
+    if (matrix.size()!=matrix[0].size())
+    {
+        NotSquareMatrix e;
+        throw e;
+    }
+    const int ms = matrix.size();
+    Matrix res = matrix;
+    for (int i = 0; i < ms-1; i++)
+    {
+        for (int j = 0; j < ms-i-1; j++)
+        {
+            res = ero_sum(res, ms-i-1, - res[j][ms-i-1]/res[ms-i-1][ms-i-1], j);
+        }
+    }
+    return res;
+}
+
 }
 
 using namespace algebra;
@@ -294,8 +339,10 @@ int main()
 {
     Matrix a = {{2, 1}, {1, 3}, {2, 1}};
     Matrix b = {{1, 3}, {6, 2}};
-    Matrix c = {{1, 3, 9}, {6, 2, 3}, {4, 2, 7}};
-    show(concatenate(a, b, 1));
+    Matrix c = {{2, -3, -2}, {1, -1, 1}, {-1, 2, 2}};
+    Matrix d = random(5,5,-10,10);
+    show(upper_triangular(d));
+    std::cout << determinant(d) <<std::endl<<determinant(upper_triangular(d))<<std::endl;
     //std::cout<<determinant(c)<<std::endl;
     return 0;
 }
