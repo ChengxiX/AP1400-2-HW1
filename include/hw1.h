@@ -5,6 +5,7 @@
 #endif //AP_HW1_H
 
 #include<vector>
+
 namespace algebra
 {
     using Vector = std::vector<double>;
@@ -16,6 +17,7 @@ namespace algebra
     struct SumIncorrespondence : public Incorrespondence {};
     struct NotSquareMatrix : public Incorrespondence {};
     struct SingularMatrix : public AlgebraException {};
+    struct CallException : public std::exception {};
 
 
     Matrix zeros(int n, int m);
@@ -33,4 +35,5 @@ namespace algebra
     Matrix minor(const Matrix& matrix, int n, int m);
     double determinant(const Matrix& matrix);
     Matrix inverse(const Matrix& matrix);
+    Matrix concatenate(const Matrix& matrix1, const Matrix& matrix2, int axis);
 }

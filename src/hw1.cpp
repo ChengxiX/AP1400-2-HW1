@@ -3,6 +3,7 @@
 #include<random>
 #include<iostream>
 #include<iomanip>
+
 namespace algebra
 {
 Matrix zeros(int n, int m)
@@ -239,7 +240,7 @@ Matrix inverse(const Matrix& matrix)
         {
             for (int j = 0; j < matrix.size(); j++)
             {
-                res[j][i] = ((i+j)%2==0 ? 1 : -1) * determinant(minor(matrix, j, i));
+                res[j][i] = ((i+j)%2==0 ? 1 : -1) * determinant(minor(matrix, j, i)); // 隐含transpose
             }
         }
     }
@@ -251,16 +252,50 @@ Matrix inverse(const Matrix& matrix)
     return multiply(res, 1/det);
 }
 
+Matrix concatenate(const Matrix& matrix1, const Matrix& matrix2, int axis=0)
+{
+    if (axis == 0)
+    {
+        if (matrix1.size()!=matrix2.size())
+        {
+            Incorrespondence e;
+            throw e;
+        }
+        Matrix res = matrix1;
+        for (int i = 0; i < res.size(); i++)
+        {
+            res[i].insert(res[i].end(), matrix2[i].begin(), matrix2[i].end());
+        }
+        return res;
+    }
+    else if (axis == 1)
+    {
+        if (matrix1[0].size()!=matrix2[0].size())
+        {
+            Incorrespondence e;
+            throw e;
+        }
+        Matrix res = matrix1;
+        res.insert(res.end(), matrix2.begin(), matrix2.end());
+        return res;
+    }
+    else
+    {
+        CallException e;
+        throw e;
+    }
+}
+
 }
 
 using namespace algebra;
 
 int main()
 {
-    //Matrix a = {{2,1 2}, {1, 3}, {2, 1}};
+    Matrix a = {{2, 1}, {1, 3}, {2, 1}};
     Matrix b = {{1, 3}, {6, 2}};
     Matrix c = {{1, 3, 9}, {6, 2, 3}, {4, 2, 7}};
-    show(inverse(c));
+    show(concatenate(a, b, 1));
     //std::cout<<determinant(c)<<std::endl;
     return 0;
 }
